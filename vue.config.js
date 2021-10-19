@@ -2,9 +2,11 @@
  * @Author: jinqing
  * @Date: 2021-10-14 16:05:49
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-14 16:24:33
+ * @LastEditTime: 2021-10-19 11:48:06
  * @Description: config
  */
+
+const registerRouter = require('./backend/router')
 
 module.exports = {
   css: {
@@ -16,6 +18,11 @@ module.exports = {
           @import "@/assets/scss/mixin.scss";
         `
       }
+    }
+  },
+  devServer: {
+    before(app) {
+      registerRouter(app)
     }
   }
 }
