@@ -2,12 +2,12 @@
  * @Author: jinqing
  * @Date: 2021-10-18 12:01:36
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-19 16:04:13
+ * @LastEditTime: 2021-10-19 17:07:36
  * @Description: 推荐
 -->
 
 <template>
-  <div class='recommend'>
+  <div class='recommend' v-loading:[loadingText]='loading'>
     <scroll class='recommend-content'>
       <div>
         <div class='slider-wrapper'>
@@ -17,7 +17,7 @@
         </div>
 
         <div class='recommend-list'>
-          <h1 class='list-title'>热门歌单推荐</h1>
+          <h1 class='list-title' v-show='!loading'>热门歌单推荐</h1>
           <ul>
             <li v-for='item in albums' class='item' :key='item.id'>
               <div class='icon'>
@@ -49,7 +49,13 @@ export default {
   data() {
     return {
       sliders: [],
-      albums: []
+      albums: [],
+      loadingText: '加载中...'
+    }
+  },
+  computed: {
+    loading() {
+      return !this.sliders.length && !this.albums.length
     }
   },
   async created() {
