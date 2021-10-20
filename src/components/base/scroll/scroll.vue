@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-19 15:24:02
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-19 15:50:05
+ * @LastEditTime: 2021-10-20 19:10:05
  * @Description: scroll
 -->
 
@@ -22,11 +22,16 @@ export default {
     click: {
       type: Boolean,
       default: true
+    },
+    probeType: {
+      type: Number,
+      default: 0
     }
   },
-  setup(props) {
+  emits: ['scroll'],
+  setup(props, { emit }) {
     const rootRef = ref(null)
-    useScroll(rootRef, props)
+    useScroll(rootRef, props, emit)
 
     return {
       rootRef

@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-18 13:42:14
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-19 11:30:31
+ * @LastEditTime: 2021-10-20 17:36:59
  * @Description: router
  */
 /*
@@ -12,7 +12,7 @@
 const axios = require('axios')
 const fs = require('fs')
 const path = require('path')
-// const pinyin = require('pinyin')
+const pinyin = require('pinyin')
 // const Base64 = require('js-base64').Base64
 // 获取签名方法
 const getSecuritySign = require('./sign')

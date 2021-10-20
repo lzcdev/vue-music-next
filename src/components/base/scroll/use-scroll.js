@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-19 15:25:18
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-19 15:47:34
+ * @LastEditTime: 2021-10-20 19:11:23
  * @Description: use-scroll
  */
 
@@ -12,14 +12,19 @@ import { onMounted, onUnmounted, ref } from '@vue/runtime-core'
 
 BScroll.use(ObserveDOM)
 
-export default function useScroll(wrapperRef, options) {
+export default function useScroll(wrapperRef, options, emit) {
   const scroll = ref(null)
 
   onMounted(() => {
-    scroll.value = new BScroll(wrapperRef.value, {
+    const scrollVal = scroll.value = new BScroll(wrapperRef.value, {
       observeDOM: true,
       ...options
     })
+    if (options.probeType > 0) {
+      scrollVal.on('scroll', pos => {
+        emit('scroll', pos)
+      })
+    }
   })
 
   onUnmounted(() => {

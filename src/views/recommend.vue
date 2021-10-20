@@ -2,12 +2,12 @@
  * @Author: jinqing
  * @Date: 2021-10-18 12:01:36
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-19 17:07:36
+ * @LastEditTime: 2021-10-20 17:59:02
  * @Description: 推荐
 -->
 
 <template>
-  <div class='recommend' v-loading:[loadingText]='loading'>
+  <div class='recommend' v-loading='loading'>
     <scroll class='recommend-content'>
       <div>
         <div class='slider-wrapper'>
@@ -49,8 +49,7 @@ export default {
   data() {
     return {
       sliders: [],
-      albums: [],
-      loadingText: '加载中...'
+      albums: []
     }
   },
   computed: {

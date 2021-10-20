@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-19 16:10:55
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-19 16:15:11
+ * @LastEditTime: 2021-10-20 17:56:50
  * @Description: loading
 -->
 
@@ -20,7 +20,7 @@ export default {
   name: 'loading',
   data() {
     return {
-      title: ''
+      title: '加载中...'
     }
   },
   methods: {
