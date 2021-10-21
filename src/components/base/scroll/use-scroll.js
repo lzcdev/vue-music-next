@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-19 15:25:18
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-20 19:11:23
+ * @LastEditTime: 2021-10-21 11:45:03
  * @Description: use-scroll
  */
 
@@ -30,4 +30,8 @@ export default function useScroll(wrapperRef, options, emit) {
   onUnmounted(() => {
     scroll.value.destroy()
   })
+
+  return {
+    scroll
+  }
 }

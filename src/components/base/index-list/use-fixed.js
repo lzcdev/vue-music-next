@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-20 18:03:18
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-20 19:42:21
+ * @LastEditTime: 2021-10-21 11:28:19
  * @Description: use-fixed
  */
 
@@ -71,6 +71,7 @@ export default function useFixed(props) {
     groupRef,
     onScroll,
     fixedTitle,
-    fixedStyle
+    fixedStyle,
+    currentIndex
   }
 }

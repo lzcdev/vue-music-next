@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-19 15:24:02
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-20 19:10:05
+ * @LastEditTime: 2021-10-21 11:54:53
  * @Description: scroll
 -->
 
@@ -31,10 +31,11 @@ export default {
   emits: ['scroll'],
   setup(props, { emit }) {
     const rootRef = ref(null)
-    useScroll(rootRef, props, emit)
+    const { scroll } = useScroll(rootRef, props, emit)
 
     return {
-      rootRef
+      rootRef,
+      scroll
     }
   }
 

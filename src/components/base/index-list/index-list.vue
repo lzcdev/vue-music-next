@@ -2,12 +2,12 @@
  * @Author: jinqing
  * @Date: 2021-10-20 17:45:15
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-20 19:41:53
+ * @LastEditTime: 2021-10-21 11:57:40
  * @Description: index-list
 -->
 
 <template>
-  <scroll class='index-list' :probe-type='3' @scroll='onScroll'>
+  <scroll class='index-list' :probe-type='3' @scroll='onScroll' ref='scrollRef'>
     <ul ref='groupRef'>
       <li v-for='group in data' :key='group.title' class='group'>
         <h2 class='title'>{{group.title}}</h2>
@@ -19,8 +19,13 @@
         </ul>
       </li>
     </ul>
-    <div class='fixed' v-show="fixedTitle" :style="fixedStyle">
+    <div class='fixed' v-show='fixedTitle' :style='fixedStyle'>
       <div class='fixed-title'>{{fixedTitle}}</div>
+    </div>
+    <div class='shortcut' @touchstart.stop.prevent='onShortcutTouchStart' @touchmove.stop.prevent='onShortcutTouchMove' @touchend.stop.prevent='onShortcutTouchEnd'>
+      <ul>
+        <li v-for='(item, index) in shortcutList' :key='item' :data-index='index' class='item' :class="{'current': currentIndex === index}">{{item}}</li>
+      </ul>
     </div>
   </scroll>
 </template>
@@ -28,6 +33,7 @@
 <script>
 import Scroll from '@/components/base/scroll/scroll'
 import useFixed from './use-fixed'
+import useShortcut from './use-shortcut'
 
 export default {
   name: 'index-list',
@@ -43,13 +49,19 @@ export default {
     }
   },
   setup(props) {
-    const { groupRef, onScroll, fixedTitle, fixedStyle } = useFixed(props)
+    const { groupRef, onScroll, fixedTitle, fixedStyle, currentIndex } = useFixed(props)
+    const { shortcutList, scrollRef, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(props, groupRef)
 
     return {
       fixedTitle,
       groupRef,
       onScroll,
-      fixedStyle
+      fixedStyle,
+      shortcutList,
+      currentIndex,
+      scrollRef,
+      onShortcutTouchStart,
+      onShortcutTouchMove
     }
   }
 }
