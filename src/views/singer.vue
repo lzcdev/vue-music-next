@@ -2,13 +2,14 @@
  * @Author: jinqing
  * @Date: 2021-10-18 12:01:53
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-20 17:56:05
+ * @LastEditTime: 2021-10-22 14:47:38
  * @Description: 歌手
 -->
 
 <template>
   <div class='singer' v-loading='!singers.length'>
-    <index-list :data='singers'></index-list>
+    <index-list :data='singers' @select='selectSinger'></index-list>
+    <router-view :singer='selectedSinger'></router-view>
   </div>
 </template>
 
@@ -23,13 +24,22 @@ export default {
   },
   data() {
     return {
-      singers: []
+      singers: [],
+      selectedSinger: null
     }
   },
   async created() {
     const result = await getSingerList()
     this.singers = result.singers
     // console.log(result)
+  },
+  methods: {
+    selectSinger(singer) {
+      this.selectedSinger = singer
+      this.$router.push({
+        path: `/singer/${singer.mid}`
+      })
+    }
   }
 }
 </script>

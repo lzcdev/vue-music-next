@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-14 15:28:07
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-18 12:34:26
+ * @LastEditTime: 2021-10-22 14:42:10
  * @Description: router
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
@@ -10,6 +10,7 @@ import Recommend from '@/views/recommend'
 import Search from '@/views/search'
 import Singer from '@/views/singer'
 import TopList from '@/views/top-list'
+import SingerDetail from '@/views/singer-detail'
 
 const routes = [
   {
@@ -26,7 +27,13 @@ const routes = [
   },
   {
     path: '/singer',
-    component: Singer
+    component: Singer,
+    children: [
+      {
+        path: ':id',
+        component: SingerDetail
+      }
+    ]
   },
   {
     path: '/top-list',
