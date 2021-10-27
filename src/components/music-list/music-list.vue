@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-26 15:35:10
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-27 16:05:09
+ * @LastEditTime: 2021-10-27 18:04:59
  * @Description: music-list
 -->
 
@@ -23,7 +23,7 @@
     </div>
     <scroll class='list' v-loading='loading' v-no-result:[noResultText]='noResult' :style='scrollStyle' :probe-type='3' @scroll='onScroll'>
       <div class='song-list-wrapper'>
-        <song-list :songs='songs'></song-list>
+        <song-list :songs='songs' @select='selectItem'></song-list>
       </div>
     </scroll>
   </div>
@@ -32,6 +32,7 @@
 <script>
 import SongList from '@/components/base/song-list/song-list'
 import Scroll from '@/components/base/scroll/scroll'
+import { mapActions } from 'vuex'
 
 const RESERVEHEIGHT = 40
 
@@ -120,7 +121,14 @@ export default {
     },
     onScroll(pos) {
       this.scrollY = -pos.y
-    }
+    },
+    selectItem({ song, index }) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+    ...mapActions(['selectPlay'])
   }
 }
 </script>

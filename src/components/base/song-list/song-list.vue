@@ -2,13 +2,13 @@
  * @Author: jinqing
  * @Date: 2021-10-26 15:44:31
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-26 16:41:46
+ * @LastEditTime: 2021-10-27 18:01:52
  * @Description: song-list
 -->
 
 <template>
   <ul class='song-list'>
-    <li class='item' v-for='song in songs' :key='song.id'>
+    <li class='item' v-for='(song, index) in songs' :key='song.id' @click='selectItem(song, index)'>
       <div class='content'>
         <h2 class='name'>{{song.name}}</h2>
         <p class='desc'>{{getDesc(song)}}</p>
@@ -28,9 +28,13 @@ export default {
       }
     }
   },
+  emits: ['select'],
   methods: {
     getDesc(song) {
       return `${song.singer}·${song.album}`
+    },
+    selectItem(song, index) {
+      this.$emit('select', { song, index })
     }
   }
 }
