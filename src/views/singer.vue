@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-18 12:01:53
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-22 14:47:38
+ * @LastEditTime: 2021-10-27 11:11:23
  * @Description: 歌手
 -->
 
@@ -16,6 +16,8 @@
 <script>
 import { getSingerList } from '@/service/singer'
 import IndexList from '@/components/base/index-list/index-list'
+import storage from 'good-storage'
+import { SINGER_KEY } from '@/assets/js/constant'
 
 export default {
   name: 'singer',
@@ -36,9 +38,13 @@ export default {
   methods: {
     selectSinger(singer) {
       this.selectedSinger = singer
+      this.cacheSinger(singer)
       this.$router.push({
         path: `/singer/${singer.mid}`
       })
+    },
+    cacheSinger(singer) {
+      storage.session.set(SINGER_KEY, singer)
     }
   }
 }
