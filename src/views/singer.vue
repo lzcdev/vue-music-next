@@ -2,14 +2,18 @@
  * @Author: jinqing
  * @Date: 2021-10-18 12:01:53
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-27 11:11:23
+ * @LastEditTime: 2021-10-27 15:26:02
  * @Description: 歌手
 -->
 
 <template>
   <div class='singer' v-loading='!singers.length'>
     <index-list :data='singers' @select='selectSinger'></index-list>
-    <router-view :singer='selectedSinger'></router-view>
+    <router-view v-slot='{ Component }'>
+      <transition appear name='slide'>
+        <component :is='Component' :singer='selectedSinger' />
+      </transition>
+    </router-view>
   </div>
 </template>
 
