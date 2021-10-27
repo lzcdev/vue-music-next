@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-26 15:35:10
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-26 16:57:30
+ * @LastEditTime: 2021-10-27 16:05:09
  * @Description: music-list
 -->
 
@@ -21,7 +21,7 @@
       </div>-->
       <div class='filter' :style='filterStyle'></div>
     </div>
-    <scroll class='list' v-loading='loading' :style='scrollStyle' :probe-type='3' @scroll='onScroll'>
+    <scroll class='list' v-loading='loading' v-no-result:[noResultText]='noResult' :style='scrollStyle' :probe-type='3' @scroll='onScroll'>
       <div class='song-list-wrapper'>
         <song-list :songs='songs'></song-list>
       </div>
@@ -50,9 +50,16 @@ export default {
     },
     title: String,
     pic: String,
-    loading: Boolean
+    loading: Boolean,
+    noResultText: {
+      type: String,
+      default: '抱歉，没有找到可播放的歌曲'
+    }
   },
   computed: {
+    noResult() {
+      return !this.loading && !this.songs.length
+    },
     bgImageStyle() {
       const scrollY = this.scrollY
       let zIndex = 0

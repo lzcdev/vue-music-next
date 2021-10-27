@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-22 15:24:55
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-27 11:27:10
+ * @LastEditTime: 2021-10-27 15:42:06
  * @Description: song
  */
 
@@ -22,9 +22,8 @@ export function processSongs(songs) {
     return songs.map((song) => {
       song.url = map[song.mid]
       return song
+    }).filter((song) => {
+      return song.url && song.url.indexOf('vkey') > -1
     })
-    // .filter((song) => {
-    //   return song.url && song.url.indexOf('vkey') > -1
-    // })
   })
 }
