@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-26 15:35:10
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-27 18:04:59
+ * @LastEditTime: 2021-10-28 11:36:53
  * @Description: music-list
 -->
 
@@ -13,12 +13,12 @@
     </div>
     <h1 class='title'>{{title}}</h1>
     <div class='bg-image' :style='bgImageStyle' ref='bgImage'>
-      <!-- <div class='play-btn-wrapper' :style='playBtnStyle'>
+      <div class='play-btn-wrapper' :style='playBtnStyle'>
         <div v-show='songs.length > 0' class='play-btn' @click='random'>
           <i class='icon-play'></i>
           <span class='text'>随机播放全部</span>
         </div>
-      </div>-->
+      </div>
       <div class='filter' :style='filterStyle'></div>
     </div>
     <scroll class='list' v-loading='loading' v-no-result:[noResultText]='noResult' :style='scrollStyle' :probe-type='3' @scroll='onScroll'>
@@ -41,6 +41,13 @@ export default {
   components: {
     SongList,
     Scroll
+  },
+  data() {
+    return {
+      imageHeight: 0,
+      scrollY: 0,
+      maxTranslateY: 0
+    }
   },
   props: {
     songs: {
@@ -87,6 +94,15 @@ export default {
         transform: `scale(${scale})translateZ(${translateZ})`
       }
     },
+    playBtnStyle() {
+      let display = ''
+      if (this.scrollY > this.maxTranslateY) {
+        display = 'none'
+      }
+      return {
+        display
+      }
+    },
     scrollStyle() {
       return {
         top: `${this.imageHeight}px`
@@ -102,13 +118,6 @@ export default {
       return {
         backdropFilter: `blur(${blur}px)`
       }
-    }
-  },
-  data() {
-    return {
-      imageHeight: 0,
-      scrollY: 0,
-      maxTranslateY: 0
     }
   },
   mounted() {
@@ -128,7 +137,10 @@ export default {
         index
       })
     },
-    ...mapActions(['selectPlay'])
+    random() {
+      this.randomPlay(this.songs)
+    },
+    ...mapActions(['selectPlay', 'randomPlay'])
   }
 }
 </script>
