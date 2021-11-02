@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-11-01 19:11:59
  * @LastEditors: jinqing
- * @LastEditTime: 2021-11-02 16:18:21
+ * @LastEditTime: 2021-11-02 16:33:45
  * @Description: player
 -->
 
@@ -25,13 +25,13 @@
             <i class='icon-sequence'></i>
           </div>
           <div class='icon i-left'>
-            <i class='icon-prev'></i>
+            <i class='icon-prev' @click='prev'></i>
           </div>
-          <div class='icon i-center' @click='togglePlay'>
-            <i :class='playIcon'></i>
+          <div class='icon i-center'>
+            <i :class='playIcon' @click='togglePlay'></i>
           </div>
           <div class='icon i-right'>
-            <i class='icon-next'></i>
+            <i class='icon-next' @click='next'></i>
           </div>
           <div class='icon i-right'>
             <i class='icon-not-favorite'></i>
@@ -53,6 +53,8 @@ export default {
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen)
     const currentSong = computed(() => store.getters.currentSong)
+    const currentIndex = computed(() => store.state.currentIndex)
+    const playList = computed(() => store.state.playList)
     const playing = computed(() => store.state.playing)
     const playIcon = computed(() => {
       return playing.value ? 'icon-pause' : 'icon-play'
@@ -84,6 +86,49 @@ export default {
       store.commit('setPlayingState', false)
     }
 
+    const prev = () => {
+      let index = currentIndex.value - 1
+      const list = playList.value
+      if (!list.length) {
+        return
+      }
+      if (list.length === 1) {
+        loop()
+      } else {
+        if (index === -1) {
+          index = list.length - 1
+        }
+        store.commit('setCurrentIndex', index)
+        if (!playing.value) {
+          store.commit('setPlayingState', true)
+        }
+      }
+    }
+
+    const next = () => {
+      let index = currentIndex.value + 1
+      const list = playList.value
+      if (!list.length) {
+        return
+      }
+      if (list.length === 1) {
+        loop()
+      } else {
+        if (index === list.length) {
+          index = 0
+        }
+        store.commit('setCurrentIndex', index)
+        if (!playing.value) {
+          store.commit('setPlayingState', true)
+        }
+      }
+    }
+
+    const loop = () => {
+      const audioEL = audioRef.value
+      audioEL.currentTime = 0
+    }
+
     return {
       playIcon,
       audioRef,
@@ -91,7 +136,10 @@ export default {
       currentSong,
       goBack,
       togglePlay,
-      pause
+      pause,
+      prev,
+      next,
+      loop
     }
   }
 }
