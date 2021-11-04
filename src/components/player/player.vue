@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-11-01 19:11:59
  * @LastEditors: jinqing
- * @LastEditTime: 2021-11-02 16:33:45
+ * @LastEditTime: 2021-11-04 15:23:17
  * @Description: player
 -->
 
@@ -24,13 +24,13 @@
           <div class='icon i-left'>
             <i class='icon-sequence'></i>
           </div>
-          <div class='icon i-left'>
+          <div class='icon i-left' :class='disableCls'>
             <i class='icon-prev' @click='prev'></i>
           </div>
-          <div class='icon i-center'>
+          <div class='icon i-center' :class='disableCls'>
             <i :class='playIcon' @click='togglePlay'></i>
           </div>
-          <div class='icon i-right'>
+          <div class='icon i-right' :class='disableCls'>
             <i class='icon-next' @click='next'></i>
           </div>
           <div class='icon i-right'>
@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <audio ref='audioRef' @pause='pause'></audio>
+    <audio ref='audioRef' @pause='pause' @canplay='ready' @error='error'></audio>
   </div>
 </template>
 <script>
@@ -50,6 +50,8 @@ export default {
   name: 'player',
   setup() {
     const audioRef = ref(null)
+    const songReady = ref(false)
+
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen)
     const currentSong = computed(() => store.getters.currentSong)
@@ -59,17 +61,23 @@ export default {
     const playIcon = computed(() => {
       return playing.value ? 'icon-pause' : 'icon-play'
     })
+    const disableCls = computed(() => {
+      return songReady.value ? '' : 'disable'
+    })
     watch(currentSong, (newSong) => {
       if (!newSong.id || !newSong.url) {
         return
       }
-      console.log(newSong)
+      songReady.value = false
       const audioEl = audioRef.value
       audioEl.src = newSong.url
       audioEl.play()
     })
 
     watch(playing, (newPlaying) => {
+      if (!songReady.value) {
+        return
+      }
       const audioElement = audioRef.value
       newPlaying ? audioElement.play() : audioElement.pause()
     })
@@ -89,7 +97,7 @@ export default {
     const prev = () => {
       let index = currentIndex.value - 1
       const list = playList.value
-      if (!list.length) {
+      if (!songReady.value || !list.length) {
         return
       }
       if (list.length === 1) {
@@ -108,7 +116,7 @@ export default {
     const next = () => {
       let index = currentIndex.value + 1
       const list = playList.value
-      if (!list.length) {
+      if (!songReady.value || !list.length) {
         return
       }
       if (list.length === 1) {
@@ -129,7 +137,18 @@ export default {
       audioEL.currentTime = 0
     }
 
+    const ready = () => {
+      if (songReady.value) {
+        return true
+      }
+      songReady.value = true
+    }
+    const error = () => {
+      songReady.value = true
+    }
     return {
+      disableCls,
+      songReady,
       playIcon,
       audioRef,
       fullScreen,
@@ -139,7 +158,9 @@ export default {
       pause,
       prev,
       next,
-      loop
+      loop,
+      ready,
+      error
     }
   }
 }
