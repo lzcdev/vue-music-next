@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-11-01 19:11:59
  * @LastEditors: jinqing
- * @LastEditTime: 2021-11-04 15:23:17
+ * @LastEditTime: 2021-11-05 16:53:07
  * @Description: player
 -->
 
@@ -22,7 +22,7 @@
       <div class='bottom'>
         <div class='operators'>
           <div class='icon i-left'>
-            <i class='icon-sequence'></i>
+            <i :class='modeIcon' @click='changeMode'></i>
           </div>
           <div class='icon i-left' :class='disableCls'>
             <i class='icon-prev' @click='prev'></i>
@@ -45,17 +45,22 @@
 <script>
 import { useStore } from 'vuex'
 import { computed, ref, watch } from 'vue'
+import useMode from './use-mode'
 
 export default {
   name: 'player',
   setup() {
+    // data
     const audioRef = ref(null)
     const songReady = ref(false)
-
+    // vuex
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen)
     const currentSong = computed(() => store.getters.currentSong)
     const currentIndex = computed(() => store.state.currentIndex)
+    // hooks
+    const { modeIcon, changeMode } = useMode()
+    // computed
     const playList = computed(() => store.state.playList)
     const playing = computed(() => store.state.playing)
     const playIcon = computed(() => {
@@ -64,6 +69,7 @@ export default {
     const disableCls = computed(() => {
       return songReady.value ? '' : 'disable'
     })
+    // watch
     watch(currentSong, (newSong) => {
       if (!newSong.id || !newSong.url) {
         return
@@ -81,7 +87,7 @@ export default {
       const audioElement = audioRef.value
       newPlaying ? audioElement.play() : audioElement.pause()
     })
-
+    // methods
     const goBack = () => {
       store.commit('setFullScreen', false)
     }
@@ -160,7 +166,9 @@ export default {
       next,
       loop,
       ready,
-      error
+      error,
+      modeIcon,
+      changeMode
     }
   }
 }

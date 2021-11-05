@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-27 17:43:54
  * @LastEditors: jinqing
- * @LastEditTime: 2021-10-27 18:10:55
+ * @LastEditTime: 2021-11-05 16:46:04
  * @Description: mutations
  */
 
@@ -17,7 +17,7 @@ const mutations = {
     state.playList = list
   },
   setPlayMode(state, mode) {
-    state.setPlayMode = mode
+    state.playMode = mode
   },
   setCurrentIndex(state, index) {
     state.currentIndex = index
