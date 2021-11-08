@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-11-01 19:11:59
  * @LastEditors: jinqing
- * @LastEditTime: 2021-11-05 16:53:07
+ * @LastEditTime: 2021-11-08 14:02:34
  * @Description: player
 -->
 
@@ -34,7 +34,7 @@
             <i class='icon-next' @click='next'></i>
           </div>
           <div class='icon i-right'>
-            <i class='icon-not-favorite'></i>
+            <i :class='getFavoriteIcon(currentSong)' @click='toggleFavorite(currentSong)'></i>
           </div>
         </div>
       </div>
@@ -46,6 +46,7 @@
 import { useStore } from 'vuex'
 import { computed, ref, watch } from 'vue'
 import useMode from './use-mode'
+import useFavorite from './use-favorite'
 
 export default {
   name: 'player',
@@ -60,6 +61,7 @@ export default {
     const currentIndex = computed(() => store.state.currentIndex)
     // hooks
     const { modeIcon, changeMode } = useMode()
+    const { getFavoriteIcon, toggleFavorite } = useFavorite()
     // computed
     const playList = computed(() => store.state.playList)
     const playing = computed(() => store.state.playing)
@@ -168,7 +170,9 @@ export default {
       ready,
       error,
       modeIcon,
-      changeMode
+      changeMode,
+      getFavoriteIcon,
+      toggleFavorite
     }
   }
 }
