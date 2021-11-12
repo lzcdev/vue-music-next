@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-11-01 19:11:59
  * @LastEditors: jinqing
- * @LastEditTime: 2021-11-08 14:02:34
+ * @LastEditTime: 2021-11-12 16:01:41
  * @Description: player
 -->
 
@@ -20,6 +20,13 @@
         <h2 class='subtitle'>{{currentSong.singer}}</h2>
       </div>
       <div class='bottom'>
+        <div class='progress-wrapper'>
+          <span class='time time-l'>{{formatTime(currentTime)}}</span>
+          <div class='progress-bar-wrapper'>
+            <progress-bar :progress='progress' @progress-changing='onProgressChanging' @progress-changed='onProgressChanged'></progress-bar>
+          </div>
+          <span class='time time-r'>{{formatTime(currentSong.duration)}}</span>
+        </div>
         <div class='operators'>
           <div class='icon i-left'>
             <i :class='modeIcon' @click='changeMode'></i>
@@ -39,7 +46,7 @@
         </div>
       </div>
     </div>
-    <audio ref='audioRef' @pause='pause' @canplay='ready' @error='error'></audio>
+    <audio ref='audioRef' @pause='pause' @canplay='ready' @error='error' @timeupdate='updateTime' @ended='end'></audio>
   </div>
 </template>
 <script>
@@ -47,18 +54,28 @@ import { useStore } from 'vuex'
 import { computed, ref, watch } from 'vue'
 import useMode from './use-mode'
 import useFavorite from './use-favorite'
+import ProgressBar from './progress-bar.vue'
+import { formatTime } from '@/assets/js/utils'
+import { PLAY_MODE } from '@/assets/js/constant'
 
 export default {
   name: 'player',
+  components: {
+    ProgressBar
+  },
   setup() {
     // data
     const audioRef = ref(null)
     const songReady = ref(false)
+    const currentTime = ref(0)
+    let progressChanging = false
+
     // vuex
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen)
     const currentSong = computed(() => store.getters.currentSong)
     const currentIndex = computed(() => store.state.currentIndex)
+    const playMode = computed(() => store.state.playMode)
     // hooks
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
@@ -68,6 +85,9 @@ export default {
     const playIcon = computed(() => {
       return playing.value ? 'icon-pause' : 'icon-play'
     })
+    const progress = computed(() => {
+      return currentTime.value / currentSong.value.duration
+    })
     const disableCls = computed(() => {
       return songReady.value ? '' : 'disable'
     })
@@ -76,6 +96,7 @@ export default {
       if (!newSong.id || !newSong.url) {
         return
       }
+      currentTime.value = 0
       songReady.value = false
       const audioEl = audioRef.value
       audioEl.src = newSong.url
@@ -143,6 +164,8 @@ export default {
     const loop = () => {
       const audioEL = audioRef.value
       audioEL.currentTime = 0
+      audioEL.play()
+      store.commit('setPlayingState', true)
     }
 
     const ready = () => {
@@ -154,13 +177,39 @@ export default {
     const error = () => {
       songReady.value = true
     }
+    const updateTime = (e) => {
+      if (!progressChanging) {
+        currentTime.value = e.target.currentTime
+      }
+    }
+    const onProgressChanging = (progress) => {
+      progressChanging = true
+      currentTime.value = currentSong.value.duration * progress
+    }
+    const onProgressChanged = (progress) => {
+      progressChanging = false
+      audioRef.value.currentTime = currentTime.value = currentSong.value.duration * progress
+      if (!playing.value) {
+        store.commit('setPlayingState', true)
+      }
+    }
+    const end = () => {
+      currentTime.value = 0
+      if (playMode.value === PLAY_MODE.loop) {
+        loop()
+      } else {
+        next()
+      }
+    }
     return {
       disableCls,
       songReady,
+      currentTime,
       playIcon,
       audioRef,
       fullScreen,
       currentSong,
+      progress,
       goBack,
       togglePlay,
       pause,
@@ -169,10 +218,15 @@ export default {
       loop,
       ready,
       error,
+      formatTime,
+      updateTime,
       modeIcon,
       changeMode,
       getFavoriteIcon,
-      toggleFavorite
+      toggleFavorite,
+      onProgressChanging,
+      onProgressChanged,
+      end
     }
   }
 }
@@ -238,6 +292,29 @@ export default {
       position: absolute;
       bottom: 50px;
       width: 100%;
+      .progress-wrapper {
+        display: flex;
+        align-items: center;
+        width: 80%;
+        margin: 0px auto;
+        padding: 10px 0;
+        .time {
+          color: $color-text;
+          font-size: $font-size-small;
+          flex: 0 0 40px;
+          line-height: 30px;
+          width: 40px;
+          &.time-l {
+            text-align: left;
+          }
+          &.time-r {
+            text-align: right;
+          }
+        }
+        .progress-bar-wrapper {
+          flex: 1;
+        }
+      }
       .operators {
         display: flex;
         align-items: center;
