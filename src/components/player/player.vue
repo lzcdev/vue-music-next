@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-11-01 19:11:59
  * @LastEditors: jinqing
- * @LastEditTime: 2021-11-16 15:00:50
+ * @LastEditTime: 2021-11-18 21:16:31
  * @Description: player
 -->
 
@@ -64,6 +64,7 @@ import { computed, ref, watch } from 'vue'
 import useMode from './use-mode'
 import useFavorite from './use-favorite'
 import useCd from './use-cd'
+import useLyric from './use-lyric'
 import ProgressBar from './progress-bar.vue'
 import { formatTime } from '@/assets/js/utils'
 import { PLAY_MODE } from '@/assets/js/constant'
@@ -90,6 +91,9 @@ export default {
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
     const { cdCls, cdRef, cdImageRef } = useCd()
+    useLyric()
+        // const { lyric } = useLyric()
+
     // computed
     const playList = computed(() => store.state.playList)
     const playing = computed(() => store.state.playing)
@@ -242,6 +246,7 @@ export default {
       cdCls,
       cdRef,
       cdImageRef
+      // lyric
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-27 17:43:54
  * @LastEditors: jinqing
- * @LastEditTime: 2021-11-08 14:08:43
+ * @LastEditTime: 2021-11-18 21:22:31
  * @Description: mutations
  */
 
@@ -27,6 +27,14 @@ const mutations = {
   },
   setFavoriteList(state, list) {
     state.favoriteList = list
+  },
+  addSongLyric(state, { song, lyric }) {
+    state.sequenceList.map(item => {
+      if (item.mid === song.mid) {
+        item.lyric = lyric
+      }
+      return item
+    })
   }
 }
 

@@ -2,7 +2,7 @@
  * @Author: jinqing
  * @Date: 2021-10-22 15:24:55
  * @LastEditors: jinqing
- * @LastEditTime: 2021-11-01 19:51:10
+ * @LastEditTime: 2021-11-18 21:27:24
  * @Description: song
  */
 
@@ -25,5 +25,24 @@ export function processSongs(songs) {
     }).filter((song) => {
       return song.url && song.url.indexOf('vkey') > -1
     })
+  })
+}
+
+const lyricMap = {}
+export function getLyric(song) {
+  if (song.lyric) {
+    return Promise.resolve(song.lyric)
+  }
+  const mid = song.mid
+  const lyric = lyricMap[mid]
+  if (lyric) {
+    return Promise.resolve(lyric)
+  }
+  return get('/api/getLyric', {
+    mid
+  }).then(result => {
+    const lyric = result ? result.lyric : '[00:00:00]该歌曲暂时无法获取歌词'
+    lyricMap[mid] = lyric
+    return lyric
   })
 }
